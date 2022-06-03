@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import moment from "moment";
 import { firebase } from "../firebase";
 import { collatedTasksExist } from "../helpers";
-import moment from "moment";
 
 export const useTasks = (selectedProject) => {
   const [tasks, setTasks] = useState([]);
@@ -11,7 +11,7 @@ export const useTasks = (selectedProject) => {
     let unsubscribe = firebase
       .firestore()
       .collection("tasks")
-      .where("userId", "==", "8MI4gq8iTbYCfmgK7zl");
+      .where("userId", "==", "jlIFXIwyAL3tzHMtzRbw");
 
     unsubscribe =
       selectedProject && !collatedTasksExist(selectedProject)
@@ -26,7 +26,7 @@ export const useTasks = (selectedProject) => {
         ? (unsubscribe = unsubscribe.where("date", "==", ""))
         : unsubscribe;
 
-    unsubscribe = unsubscribe.Snapshot((snapshot) => {
+    unsubscribe = unsubscribe.onSnapshot((snapshot) => {
       const newTasks = snapshot.docs.map((task) => ({
         id: task.id,
         ...task.data(),
@@ -41,7 +41,6 @@ export const useTasks = (selectedProject) => {
             )
           : newTasks.filter((task) => task.archived !== true)
       );
-
       setArchivedTasks(newTasks.filter((task) => task.archived !== false));
     });
 
@@ -58,7 +57,7 @@ export const useProjects = () => {
     firebase
       .firestore()
       .collection("projects")
-      .where("userId", "==", "8MI4gq8iTbYCfmgK7zl")
+      .where("userId", "==", "jlIFXIwyAL3tzHMtzRbw")
       .orderBy("projectId")
       .get()
       .then((snapshot) => {
